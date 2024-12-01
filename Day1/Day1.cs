@@ -6,7 +6,7 @@ namespace AdventOfCode2024.Day1
 {
     public class Day1
     {
-        public static void CalculatePart1()
+        public static void Calculate()
         {
             var path = Path.GetFullPath("Day1/input/part1Input.txt");
 
