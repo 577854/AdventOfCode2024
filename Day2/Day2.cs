@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AdventOfCode2024.Day2
 {
-    public class Day1
+    public class Day2
     {
         public static void Calculate()
         {
@@ -25,12 +25,35 @@ namespace AdventOfCode2024.Day2
 
         private static int Part1Calc(string[] lines)
         {
-           
+	    List<List<int>> reportsList = new List<List<int>>();
+	    List<int> reportList = new List<int>();  	    
+ 
+            foreach (string line in lines)
+            {
+                var lineSplit = line.Split(" ");
+		
+		foreach(var ls in lineSplit)
+		{
+		   // Console.Write(ls);
+		    reportList.Add(int.Parse(ls));
+		}
+		//Console.WriteLine();	
+		reportsList.Add(reportList);
+		reportList.Clear();
+            }
+	    foreach(var report in reportsList){
+		foreach(var num in report){
+	 	    Console.Write(num + "-");
+		}
+		Console.WriteLine("new line :)");
+	    }
+	    
+	    return 0;           
         }
 
         private static int Part2Calc(string[] lines)
         {
-            
+            return 0;
         }
 
     }
