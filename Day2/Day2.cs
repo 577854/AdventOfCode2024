@@ -8,7 +8,7 @@ namespace AdventOfCode2024.Day2
     {
         public static void Calculate()
         {
-            var path = Path.GetFullPath("Day2/input/Test.txt");
+            var path = Path.GetFullPath("Day2/input/part1input.txt");
 
              // Create an instance of FileReader
             FileReader fileReader = new FileReader();
@@ -72,15 +72,13 @@ namespace AdventOfCode2024.Day2
                 } 
                     
             }
-	        return safeReports;           
+	        return CalculateSafeReports(reportsList, new List<List<int>>());           
         }
 
         private static int Part2Calc(string[] lines)
         {
             List<List<int>> reportsList = new List<List<int>>();
 	        List<int> reportList = new List<int>();  	    
-
-            int safeReports = 0;
 
             foreach (string line in lines)
             {
@@ -95,26 +93,71 @@ namespace AdventOfCode2024.Day2
                 reportList = new List<int>();
             }
 
+            //foreach (var report in reportsList)
+            //{
+            //    foreach (var num in report){
+            //        Console.Write(num + " ");
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            var unsafeReports = new List<List<int>>();
+
+	        var safeReports = CalculateSafeReports(reportsList, unsafeReports);
+
+            foreach (var rep in unsafeReports)
+            {                
+                //foreach(var num in rep){Console.Write(num + " ");}
+                //Console.WriteLine("\n---------");
+                for (int i = 0; i < rep.Count; i++)
+                {
+                    List<int> modifiedList = new List<int>(rep);
+                    modifiedList.RemoveAt(i);
+                    
+                    //foreach(var num in modifiedList){Console.Write(num + " ");}
+                    //Console.Write("|");
+                    
+                    if(IsSafeReport(modifiedList))
+                    {
+                        safeReports++;
+                        //Console.Write($"SAFE BY REMOVING INDEX {i}          ");
+                        break;
+                    }
+                }
+                //Console.Write("UNSAFE");
+                //Console.WriteLine("\n---------");
+            }   
+            return safeReports;
+        }
+
+        private static int CalculateSafeReports(List<List<int>> reportsList, List<List<int>> unsafeReports)
+        {
+            var safeReports = 0;
+
             foreach (var report in reportsList)
             {
-                foreach (var num in report){
-                    Console.Write(num + " ");
+                if (IsSafeReport(report))
+                {
+                    safeReports++;
                 }
-                Console.WriteLine();
+                else
+                {
+                    unsafeReports.Add(report);
+                }
             }
 
-            string bleh = "";
-            foreach (var report in reportsList)
-            {
+            return safeReports;
+        }
+
+        private static bool IsSafeReport(List<int> report)
+        {
                 bool notSafe = false;
                 var diffList = new List<int>();
-                var tolerate = true; 
                 
                 for (int i = 0; i < report.Count; i++)
                 {
                     if(i + 1 == report.Count)
                     {
-                        bleh += report[i];    
                         break;
                     } 
                     
@@ -122,35 +165,19 @@ namespace AdventOfCode2024.Day2
 
                     diffList.Add(diff);
 
-                    bleh += report[i] + " (" + diff +") ";
-
                     if ((Math.Abs(diff) < 1 || Math.Abs(diff) > 3))
                     {
-                        if(tolerate){
-                            bleh += $"(R {report[i + 1]}) | ";
-                            report.RemoveAt(i);
-                            diffList.RemoveAt(diffList.Count - 1);
-                            i -= 1;
-                            tolerate = false;
-                            continue;
-                        }
                         notSafe = true;
-                        bleh += $"{report[i+1]}";
                         break;
                     }
                 }
 
                 if(!notSafe && (diffList.All(n => n < 0) || diffList.All(n => n > 0)))
                 {
-                    safeReports++;
-                    bleh += " - SAFE\n";
+                    return true;
                 }
-                else{
-                    bleh += " - UNSAFE\n";
-                }
-            }
-            Console.WriteLine(bleh);
-	        return safeReports; 
+            
+            return false;
         }
 
     }
